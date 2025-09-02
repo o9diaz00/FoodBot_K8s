@@ -4,5 +4,5 @@ secrets:
   token: "dummy_TOKEN"
 image:
   repository: ghcr.io/o9diaz00/foodbot
-  tag: 1.0.0
+  tag: latest
   dockerConfig: "dummy_DOCKERCONFIG"
