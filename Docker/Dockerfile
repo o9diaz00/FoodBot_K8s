@@ -1,7 +1,7 @@
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --production
-RUN apk --no-cache add curl
+RUN apt-get update && apt-get install -y curl grep && apt-get clean
 COPY . .
 CMD ["node", "index.js"]
