@@ -28,10 +28,10 @@ jobs:
           export KUEBCONFIG=$PWD/kubeconfig
 
       - name: Create GHCR Secret for Image Pulling
-        run: kubectl create secret docker-registry ghc-secret --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GHCR_PAT }} --docker-email=${{ github.event.pusher.email }} --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create secret docker-registry ghc-secret --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GHCR_PAT }} --docker-email=${{ github.event.pusher.email }} --dry-run=client -o yaml | kubectl apply --validate=false -f -
 
       - name: Create Discord Bot Secrets
-        run: kubectl create secret generic foodbot-secret --from-literal=token=${{ secrets.DISCORD_TOKEN }} --from-literal=clientId=${{ secrets.DISCORD_CLIENTID }} --from-literal=guildId=${{ secrets.DISCORD_GUILDID }} --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create secret generic foodbot-secret --from-literal=token=${{ secrets.DISCORD_TOKEN }} --from-literal=clientId=${{ secrets.DISCORD_CLIENTID }} --from-literal=guildId=${{ secrets.DISCORD_GUILDID }} --dry-run=client -o yaml | kubectl apply --validate=false -f -
 
       - name: Helm Deploy
         run: helm upgrade --install foodbot ./helm-chart --namespace=default --set image.repository=ghcr.io/o9diaz00/foodbot --set image.tag=1.0.0 --set image.pullSecret=ghcr-secret
