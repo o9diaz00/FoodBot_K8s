@@ -5,3 +5,4 @@ secrets:
 image:
   repository: ghcr.io/o9diaz00/foodbot
   tag: latest
+  pullPolicy: Always
