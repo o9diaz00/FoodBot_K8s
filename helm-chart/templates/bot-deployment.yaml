@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: clientId
+          - name: GUILD_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: guildId
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: token
+

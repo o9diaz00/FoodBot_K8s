@@ -1,0 +1,8 @@
+secrets:
+  clientId: "dummy"
+  guildId: "dummy"
+  token: "dummy"
+image:
+  repository: ghcr.io/o9diaz00/foodbot
+  tag: 1.0.0
+  pullSecret: ghcr-secret
