@@ -19,7 +19,7 @@ jobs:
           sed -i "s/dummy_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" helm-chart/values.yaml
 
       - name: Create GHCR Secret
-        run: kubectl create secret docker-registry ghc-secret --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GHCR_PAT }} --docker-email=${{ github.event.pusher.email }} --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create secret docker-registry ghcr-secret --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GHCR_PAT }} --docker-email=${{ github.event.pusher.email }} --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Helm Deploy
         run: helm upgrade --install foodbot ./helm-chart
