@@ -1,8 +1,8 @@
 secrets:
-  clientId: "dummy"
-  guildId: "dummy"
-  token: "dummy"
+  clientId: "dummy_CLIENTID"
+  guildId: "dummy_GUILDID"
+  token: "dummy_TOKEN"
 image:
   repository: ghcr.io/o9diaz00/foodbot
   tag: 1.0.0
-  pullSecret: ghcr-secret
+  dockerConfig: "dummy_DOCKERCONFIG"

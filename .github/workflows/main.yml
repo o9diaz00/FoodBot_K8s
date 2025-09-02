@@ -6,36 +6,18 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: discord-bot
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Kind Cluster
-        uses: engineerd/setup-kind@v0.5.0
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: v1.34.0
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.18.6
-
-      - name: Create GHCR Secret for Image Pulling
-        run: kubectl create secret docker-registry ghc-secret --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GHCR_PAT }} --docker-email=${{ github.event.pusher.email }} --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Create Discord Bot Secrets
-        run: kubectl create secret generic foodbot-secret --from-literal=token=${{ secrets.DISCORD_TOKEN }} --from-literal=clientId=${{ secrets.DISCORD_CLIENTID }} --from-literal=guildId=${{ secrets.DISCORD_GUILDID }} --dry-run=client -o yaml | kubectl apply -f -
+      - name: Update yaml files
+        run: |
+          sed -i "s/dummy_CLIENTID/${{ secrets.DISCORD_CLIENTID }}/g" values.yaml
+          sed -i "s/dummy_GUILDID/${{ secrets.DISCORD_GUILDID }}/g" values.yaml
+          sed -i "s/dummy_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" values.yaml
+          sed -i "s/dummy_DOCKERCONFIG/${{ secrets.GHCR_DOCKERCONFIG }}/g" values.yaml
 
       - name: Helm Deploy
-        run: helm upgrade --install foodbot ./helm-chart --set image.repository=ghcr.io/o9diaz00/foodbot --set image.tag=1.0.0 --set image.pullSecret=ghcr-secret
-
-      - name: Wait for deployment rollout
-        run: kubectl rollout status deployment/foodbot-deployment
-
-      - name: Show pods status
-        run: kubectl get pods
+        run: helm upgrade --install foodbot ./helm-chart
